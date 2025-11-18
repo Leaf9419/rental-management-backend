@@ -57,7 +57,7 @@ public class Property {
     @Column(name = "description")
     private String description;
 
-    // 聯絡人
+    // 聯絡人 5
     @Column(name = "contact_role")
     private String contactRole;
 
@@ -73,7 +73,7 @@ public class Property {
     @Column(name = "contact_line")
     private String contactLine;
 
-    // 地址
+    // 地址 6
     @Column(name = "city")
     private String city;
 
@@ -95,7 +95,7 @@ public class Property {
     // geography_point 是計算欄位，通常不在 Entity 中映射
     // 如果需要可以使用 @Formula 或在查詢時計算
 
-    // 建物
+    // 建物 4
     @Column(name = "building_name")
     private String buildingName;
 
@@ -109,7 +109,7 @@ public class Property {
     @Column(name = "has_elevator")
     private Boolean hasElevator;
 
-    // 格局
+    // 格局 6
     @Column(name = "bedrooms")
     private Integer bedrooms;
 
@@ -129,46 +129,15 @@ public class Property {
     private BigDecimal usableArea;
 
     // 租客偏好
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(name = "preferred_tenant_gender")
-    private PreferredTenantGender preferredTenantGender;
+    private PreferredTenantGender preferredTenantGender = PreferredTenantGender.NONE;
 
     // 設備與設施
-    @Column(name = "has_washing_machine")
-    private Boolean hasWashingMachine;
-
-    @Column(name = "has_refrigerator")
-    private Boolean hasRefrigerator;
-
-    @Column(name = "has_air_conditioner")
-    private Boolean hasAirConditioner;
-
-    @Column(name = "has_water_heater")
-    private Boolean hasWaterHeater;
-
-    @Column(name = "has_television")
-    private Boolean hasTelevision;
-
-    @Column(name = "has_bed")
-    private Boolean hasBed;
-
-    @Column(name = "has_wardrobe")
-    private Boolean hasWardrobe;
-
-    @Column(name = "has_desk")
-    private Boolean hasDesk;
-
-    @Column(name = "has_internet")
-    private Boolean hasInternet;
-
-    @Column(name = "has_natural_gas")
-    private Boolean hasNaturalGas;
-
-    @Column(name = "has_fire_extinguisher")
-    private Boolean hasFireExtinguisher;
-
-    @Column(name = "has_smoke_detector")
-    private Boolean hasSmokeDetector;
+    @Builder.Default
+    @Column(name = "property_facilities")
+    private Long propertyFacilities = 0L;
 
     // 開伙 & 養寵物
     @Column(name = "allows_cooking")
@@ -177,7 +146,7 @@ public class Property {
     @Column(name = "allows_pets")
     private Boolean allowsPets;
 
-    // 租金
+    // 租金 4
     @Column(name = "monthly_rent")
     private Integer monthlyRent;
 
@@ -194,9 +163,6 @@ public class Property {
     @Column(name = "min_lease_months")
     private Integer minLeaseMonths;
 
-    @Column(name = "available_immediately")
-    private Boolean availableImmediately;
-
     @Column(name = "available_from_date")
     private LocalDateTime availableFromDate;
 
@@ -208,17 +174,20 @@ public class Property {
     private String certificateImageUrl;
 
     // 狀態
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(name = "publish_status")
-    private PublishStatus publishStatus;
+    private PublishStatus publishStatus = PublishStatus.DRAFT;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(name = "review_status")
-    private ReviewStatus reviewStatus;
+    private ReviewStatus reviewStatus = ReviewStatus.NONE;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(name = "rental_status")
-    private RentalStatus rentalStatus;
+    private RentalStatus rentalStatus = RentalStatus.AVAILABLE;
 
     // 業務時間戳 format: yyyy-MM-dd HH:mm:ss
     @Column(name = "first_published_at")
@@ -237,7 +206,7 @@ public class Property {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @Column(name = "deleted_at")
+    @Column(name = "deleted_at", insertable = false, updatable = false)
     private LocalDateTime deletedAt;
 
     public boolean isDeleted() {
@@ -246,8 +215,7 @@ public class Property {
 
     @PrePersist
     protected void onCreate() {
-        LocalDateTime now = LocalDateTime.now();
-        createdAt = now;
+        createdAt = LocalDateTime.now();
     }
 
     @PreUpdate
