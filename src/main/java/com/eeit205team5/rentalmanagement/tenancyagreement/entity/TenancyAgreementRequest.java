@@ -1,13 +1,43 @@
+package com.eeit205team5.rentalmanagement.tenancyagreement.entity;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "tenancy_agreement_requests")
 public class TenancyAgreementRequest {
 
+    @Id
+    @Column(name = "tenancy_agreement_request_id")
     private Long tenancyAgreementRequestId;
+
+    @Column(name = "tenancy_agreement_id")
     private Long tenancyAgreementId;
+
+    @Column(name = "request_type")
     private String requestType;
+
+    @Column(name = "incurred_costs")
     private Long incurredCosts;
+
+    @Column(name = "apply_by")
     private Long applyBy;
+
+    @Column(name = "create_time")
     private LocalDateTime createTime;
+
+    @Column(name = "handle_by")
     private Long handleBy;
+
+    @Column(name = "effective_date")
     private LocalDate effectiveDate;
+
+    @Column(name = "request_status")
     private String requestStatus;
 
     public Long getTenancyAgreementRequestId() {

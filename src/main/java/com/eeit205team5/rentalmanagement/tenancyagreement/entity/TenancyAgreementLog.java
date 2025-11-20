@@ -1,11 +1,36 @@
+package com.eeit205team5.rentalmanagement.tenancyagreement.entity;
+
+import java.time.LocalDateTime;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "tenancy_agreement_logs")
 public class TenancyAgreementLog {
 
+    @Id
+    @Column(name = "tenancy_agreement_status_id")
     private Long tenancyAgreementStatusId;
+
+    @Column(name = "tenancy_agreement_id")
     private Long tenancyAgreementId;
+
+    @Column(name = "old_status")
     private String oldStatus;
+
+    @Column(name = "now_status")
     private String nowStatus;
+
+    @Column(name = "update_time")
     private LocalDateTime updateTime;
+
+    @Column(name = "update_by")
     private Long updateBy;
+
+    @Column(name = "remark")
     private String remark;
 
     public Long getTenancyAgreementStatusId() {

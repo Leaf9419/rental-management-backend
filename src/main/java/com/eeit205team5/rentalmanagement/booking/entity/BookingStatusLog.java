@@ -1,10 +1,34 @@
+package com.eeit205team5.rentalmanagement.booking.entity;
+
+import java.time.LocalDateTime;
+
+import org.springframework.data.annotation.Id;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "booking_status_logs")
 public class BookingStatusLog {
 
+    @Id
+    @Column(name = "booking_status_log_id")
     private Long bookingStatusLogId;
+
+    @Column(name = "booking_id")
     private Long bookingId;
+
+    @Column(name = "old_status")
     private String oldStatus;
+
+    @Column(name = "now_status")
     private String nowStatus;
+
+    @Column(name = "update_time")
     private LocalDateTime updateTime;
+
+    @Column(name = "update_by")
     private Long updateBy;
 
     public Long getBookingStatusLogId() {

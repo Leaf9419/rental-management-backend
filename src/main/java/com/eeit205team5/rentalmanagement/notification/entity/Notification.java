@@ -1,14 +1,45 @@
+package com.eeit205team5.rentalmanagement.notification.entity;
+
+import java.time.LocalDateTime;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "notifications")
 public class Notification {
 
+    @Id
+    @Column(name = "notification_id")
     private Long notificationId;
+
+    @Column(name = "user_id")
     private Long userId;
+
+    @Column(name = "notification_type")
     private String notificationType;
+
+    @Column(name = "notification_title")
     private String notificationTitle;
+
+    @Column(name = "notification_message")
     private String notificationMessage;
+
+    @Column(name = "notification_status")
     private String notificationStatus;
+
+    @Column(name = "sent_at")
     private LocalDateTime sentAt;
+
+    @Column(name = "access_by")
     private String accessBy;
+
+    @Column(name = "payload_json")
     private String payloadJson;
+
+    @Column(name = "response_code")
     private Long responseCode;
 
     public Long getNotificationId() {

@@ -1,8 +1,27 @@
+package com.eeit205team5.rentalmanagement.schedule.entity;
+
+import java.time.LocalDateTime;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "system_settings")
 public class SystemSetting {
 
+    @Id
+    @Column(name = "system_setting_id")
     private Long systemSettingId;
+
+    @Column(name = "setting_value")
     private String settingValue;
+
+    @Column(name = "description")
     private String description;
+
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
     public Long getSystemSettingId() {

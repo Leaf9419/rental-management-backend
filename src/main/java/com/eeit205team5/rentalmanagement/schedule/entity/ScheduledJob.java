@@ -1,11 +1,36 @@
+package com.eeit205team5.rentalmanagement.schedule.entity;
+
+import java.time.LocalDateTime;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "scheduled_jobs")
 public class ScheduledJob {
 
+    @Id
+    @Column(name = "scheduled_job_id")
     private Long scheduledJobId;
+
+    @Column(name = "job_name")
     private String jobName;
+
+    @Column(name = "description")
     private String description;
+
+    @Column(name = "last_run_at")
     private LocalDateTime lastRunAt;
+
+    @Column(name = "next_run_at")
     private LocalDateTime nextRunAt;
+
+    @Column(name = "status")
     private String status;
+
+    @Column(name = "remark")
     private String remark;
 
     public Long getScheduledJobId() {
