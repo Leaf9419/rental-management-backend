@@ -77,7 +77,7 @@ public class PropertySpecification {
     }
 
     // 價格
-    public static Specification<Property> inRentRange(Integer minRent, Integer maxRent) {
+    public static Specification<Property> inRentRange(BigDecimal minRent, BigDecimal maxRent) {
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
@@ -97,18 +97,18 @@ public class PropertySpecification {
 
     // 面積
     public static Specification<Property> inAreaRange(
-            BigDecimal minUsableArea, BigDecimal maxUsableArea) {
+            BigDecimal minArea, BigDecimal maxArea) {
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
-            if (minUsableArea != null) {
+            if (minArea != null) {
                 predicates.add(criteriaBuilder.greaterThanOrEqualTo(
-                        root.get("usableArea"), minUsableArea));
+                        root.get("usableArea"), minArea));
             }
 
-            if (maxUsableArea != null) {
+            if (maxArea != null) {
                 predicates.add(criteriaBuilder.lessThanOrEqualTo(
-                        root.get("usableArea"), maxUsableArea));
+                        root.get("usableArea"), maxArea));
             }
 
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));

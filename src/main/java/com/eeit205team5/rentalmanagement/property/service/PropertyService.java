@@ -7,8 +7,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import com.eeit205team5.rentalmanagement.property.constant.SortBy;
+import com.eeit205team5.rentalmanagement.property.constant.SortOrder;
+import com.eeit205team5.rentalmanagement.property.dto.PropertySearchRequest;
 import com.eeit205team5.rentalmanagement.property.entity.Property;
 import com.eeit205team5.rentalmanagement.property.repository.PropertyRepository;
+import com.eeit205team5.rentalmanagement.property.repository.PropertySpecification;
 
 import lombok.RequiredArgsConstructor;
 
@@ -18,28 +22,35 @@ public class PropertyService {
 
     private final PropertyRepository propertyRepository;
 
-    public Page<Property> findProperties(PageRequest<PropertyQueryFilter> request) {
-        PropertyQueryFilter filter = request.getFilter();
-
-        // 建立 Specification
-        Specification<Property> spec = PropertySpecifications.fromFilter(filter);
-
-        // 建立 Spring Data Pageable
+    public Page<Property> searchProperties(PropertySearchRequest request) {
+        // 1. 建立分頁請求
+        int page = request.getPage() != null ? request.getPage() : 0;
+        int size = request.getSize() != null ? request.getSize() : 10;
+        SortBy sortBy = request.getSortBy() != null ? request.getSortBy() : SortBy.CREATED_AT;
+        SortOrder sortOrder = request.getSortOrder() != null ? request.getSortOrder() : SortOrder.DESC;
         Sort sort = Sort.by(
-                request.getDir() ? Sort.Direction.DESC : Sort.Direction.ASC,
-                request.getOrder() == null ? "propertyId" : request.getOrder());
+                sortOrder == SortOrder.ASC ? Sort.Direction.ASC : Sort.Direction.DESC,
+                sortBy.getValue());
+        Pageable pageable = PageRequest.of(page, size, sort);
 
-        Pageable pageable = org.springframework.data.domain.PageRequest.of(
-                request.getStart() / request.getRows(), // 頁碼
-                request.getRows(), // 每頁筆數
-                sort);
+        // 2. 建立查詢規格
+        Specification<Property> spec = Specification.allOf(
+                PropertySpecification.withKeyword(request.getKeyword()),
+                PropertySpecification.byPropertyType(request.getPropertyType()),
+                PropertySpecification.byBuildingType(request.getBuildingType()),
+                PropertySpecification.byLocation(request.getCity(), request.getDistrict()),
+                PropertySpecification.inRentRange(request.getMinRent(), request.getMaxRent()),
+                PropertySpecification.inAreaRange(request.getMinArea(), request.getMaxArea()),
+                PropertySpecification.byBedrooms(request.getBedrooms()),
+                PropertySpecification.inFloorRange(request.getMinFloor(), request.getMaxFloor()),
+                PropertySpecification.hasFacilities(request.getFacilitiesBitmask()),
+                PropertySpecification.hasFeatures(request.getHasElevator(),
+                        request.getHasParkingSpace(),
+                        request.getHasBalcony(), request.getAllowsCooking(),
+                        request.getAllowsPets()),
+                PropertySpecification.byPreferredTenantGender(request.getPreferredTenantGender()));
 
-        // 🎉 一行搞定！
+        // 3. 執行查詢
         return propertyRepository.findAll(spec, pageable);
-    }
-
-    public long countProperties(PropertyQueryFilter filter) {
-        Specification<Property> spec = PropertySpecifications.fromFilter(filter);
-        return propertyRepository.count(spec);
     }
 }

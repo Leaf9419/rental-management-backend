@@ -148,13 +148,13 @@ public class Property {
 
     // 租金 4
     @Column(name = "monthly_rent")
-    private Integer monthlyRent;
+    private BigDecimal monthlyRent;
 
     @Column(name = "deposit_months")
     private BigDecimal depositMonths;
 
     @Column(name = "management_fee")
-    private Integer managementFee;
+    private BigDecimal managementFee;
 
     @Column(name = "utility_fee_included")
     private Boolean utilityFeeIncluded;

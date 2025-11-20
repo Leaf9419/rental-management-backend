@@ -6,8 +6,10 @@ import org.springframework.data.domain.Page;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /*
@@ -19,19 +21,21 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder // 建造者模式，可以用鏈式呼叫的方式建立物件
+@NoArgsConstructor
+@AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ApiResponse<T> {
     private Boolean success;
     private String message;
     private Long count;
-    private List<T> list;
-    private T data; // 前端使用response.data.data取得
+    private T data;
 
     // 分頁資訊
-    private Integer page; // 當前頁(從0開始)
     private Integer size; // 每頁筆數
-    private Integer totalPages; // 總筆數
-    private Boolean hasNext; // 是否還有下一頁
+    private Integer page; // 當前頁(從0開始)
+    private Integer totalPages; // 總頁數
+    private Boolean hasNext; // 是否有下一頁
+    private Boolean hasPrevious; // 是否有上一頁
 
     // 便利方法
     public static <T> ApiResponse<T> success(String message) {
@@ -49,33 +53,17 @@ public class ApiResponse<T> {
                 .build();
     }
 
-    public static <T> ApiResponse<T> successList(List<T> list, Long count, String message) {
-        return ApiResponse.<T>builder()
+    public static <T> ApiResponse<List<T>> successPage(Page<T> page, String message) {
+        return ApiResponse.<List<T>>builder()
                 .success(true)
                 .message(message)
-                .list(list)
-                .count(count)
-                .build();
-    }
-
-    public static <T> ApiResponse<T> successList(List<T> list, String message) {
-        return ApiResponse.<T>builder()
-                .success(true)
-                .message(message)
-                .list(list)
-                .build();
-    }
-
-    public static <T> ApiResponse<T> successPage(Page<T> page, String message) {
-        return ApiResponse.<T>builder()
-                .success(true)
-                .message(message)
-                .list(page.getContent())
+                .data(page.getContent())
                 .count(page.getTotalElements())
-                .page(page.getNumber())
                 .size(page.getSize())
+                .page(page.getNumber())
                 .totalPages(page.getTotalPages())
                 .hasNext(page.hasNext())
+                .hasPrevious(page.hasPrevious())
                 .build();
     }
 
