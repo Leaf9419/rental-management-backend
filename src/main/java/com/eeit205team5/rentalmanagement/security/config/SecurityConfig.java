@@ -47,17 +47,27 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
                 // 授權設定
-                .authorizeHttpRequests(auth -> auth
-                        // 公開的API(不需要認證)
-                        .requestMatchers(
-                                "/auth/register",
-                                "/auth/login")
-                        .permitAll()
-                        .requestMatchers(PermitUrlLeaf.URLS).permitAll()
-                        .requestMatchers(PermitUrlNa.URLS).permitAll()
-                        .requestMatchers(PermitUrlJohn.URLS).permitAll()
-                        // 其他所有請求都需要認證
-                        .anyRequest().authenticated())
+                .authorizeHttpRequests(auth -> {
+                    // 公開的API(不需要認證)
+                    auth.requestMatchers(
+                            "/auth/register",
+                            "/auth/login")
+                            .permitAll();
+
+                    // 公開的API(不需要認證) for test
+                    if (PermitUrlLeaf.URLS.length > 0) {
+                        auth.requestMatchers(PermitUrlLeaf.URLS).permitAll();
+                    }
+                    if (PermitUrlNa.URLS.length > 0) {
+                        auth.requestMatchers(PermitUrlNa.URLS).permitAll();
+                    }
+                    if (PermitUrlJohn.URLS.length > 0) {
+                        auth.requestMatchers(PermitUrlJohn.URLS).permitAll();
+                    }
+
+                    // 其他所有請求都需要認證
+                    auth.anyRequest().authenticated();
+                })
 
                 // 在UsernamePasswordAuthenticationFilter之前加入JWT filter
                 .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
