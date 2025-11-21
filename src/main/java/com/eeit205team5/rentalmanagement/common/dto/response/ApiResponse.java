@@ -53,6 +53,15 @@ public class ApiResponse<T> {
                 .build();
     }
 
+    public static <T> ApiResponse<T> success(T data, Long count, String message) {
+        return ApiResponse.<T>builder()
+                .success(true)
+                .message(message)
+                .data(data)
+                .count(count)
+                .build();
+    }
+
     public static <T> ApiResponse<List<T>> successPage(Page<T> page, String message) {
         return ApiResponse.<List<T>>builder()
                 .success(true)

@@ -3,8 +3,7 @@ package com.eeit205team5.rentalmanagement.property.entity;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-import org.hibernate.annotations.SoftDelete;
-import org.hibernate.annotations.SoftDeleteType;
+import org.hibernate.annotations.SQLRestriction;
 
 import com.eeit205team5.rentalmanagement.property.constant.BuildingType;
 import com.eeit205team5.rentalmanagement.property.constant.PreferredTenantGender;
@@ -34,7 +33,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@SoftDelete(columnName = "deleted_at", strategy = SoftDeleteType.DELETED)
+@SQLRestriction("deleted_at IS NULL") // 會套用在所有 JPQL/HQL 查詢，但不會套用在 Native Query
 public class Property {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -129,15 +128,13 @@ public class Property {
     private BigDecimal usableArea;
 
     // 租客偏好
-    @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(name = "preferred_tenant_gender")
-    private PreferredTenantGender preferredTenantGender = PreferredTenantGender.NONE;
+    private PreferredTenantGender preferredTenantGender;
 
     // 設備與設施
-    @Builder.Default
     @Column(name = "property_facilities")
-    private Long propertyFacilities = 0L;
+    private Long propertyFacilities;
 
     // 開伙 & 養寵物
     @Column(name = "allows_cooking")
@@ -206,12 +203,8 @@ public class Property {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @Column(name = "deleted_at", insertable = false, updatable = false)
+    @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
-
-    public boolean isDeleted() {
-        return this.deletedAt != null;
-    }
 
     @PrePersist
     protected void onCreate() {

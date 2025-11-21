@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import com.eeit205team5.rentalmanagement.property.entity.Property;
 
 public interface PropertyRepository extends JpaRepository<Property, Long>,
-        JpaSpecificationExecutor<Property> {
+    JpaSpecificationExecutor<Property> {
 }

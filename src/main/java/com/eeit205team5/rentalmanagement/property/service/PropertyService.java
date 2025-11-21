@@ -7,8 +7,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import com.eeit205team5.rentalmanagement.property.constant.PublishStatus;
 import com.eeit205team5.rentalmanagement.property.constant.SortBy;
 import com.eeit205team5.rentalmanagement.property.constant.SortOrder;
+import com.eeit205team5.rentalmanagement.property.dto.PropertyCreateRequest;
 import com.eeit205team5.rentalmanagement.property.dto.PropertySearchRequest;
 import com.eeit205team5.rentalmanagement.property.entity.Property;
 import com.eeit205team5.rentalmanagement.property.repository.PropertyRepository;
@@ -48,9 +50,14 @@ public class PropertyService {
                         request.getHasParkingSpace(),
                         request.getHasBalcony(), request.getAllowsCooking(),
                         request.getAllowsPets()),
-                PropertySpecification.byPreferredTenantGender(request.getPreferredTenantGender()));
+                PropertySpecification.byPreferredTenantGender(request.getPreferredTenantGender()),
+                PropertySpecification.byPublishStatus(PublishStatus.ACTIVE));
 
         // 3. 執行查詢
         return propertyRepository.findAll(spec, pageable);
+    }
+
+    public Property createProperty(PropertyCreateRequest request) {
+        return null;
     }
 }
