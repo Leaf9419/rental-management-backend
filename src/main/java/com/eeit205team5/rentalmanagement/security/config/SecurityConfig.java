@@ -11,6 +11,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.eeit205team5.rentalmanagement.PermitUrlJohn;
+import com.eeit205team5.rentalmanagement.PermitUrlLeaf;
+import com.eeit205team5.rentalmanagement.PermitUrlNa;
 import com.eeit205team5.rentalmanagement.security.JwtAuthenticationFilter;
 
 import lombok.RequiredArgsConstructor;
@@ -47,9 +50,12 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // 公開的API(不需要認證)
                         .requestMatchers(
-                                "/api/auth/register",
-                                "/api/auth/login")
+                                "/auth/register",
+                                "/auth/login")
                         .permitAll()
+                        .requestMatchers(PermitUrlLeaf.URLS).permitAll()
+                        .requestMatchers(PermitUrlNa.URLS).permitAll()
+                        .requestMatchers(PermitUrlJohn.URLS).permitAll()
                         // 其他所有請求都需要認證
                         .anyRequest().authenticated())
 

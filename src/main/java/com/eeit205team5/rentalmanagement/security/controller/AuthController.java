@@ -18,16 +18,15 @@ import com.eeit205team5.rentalmanagement.security.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
-
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService service;
 
     /**
      * 註冊API
-     * POST /api/auth/register
+     * POST /auth/register
      * 
      * @param request
      * @return 200 OK + ApiResponse<AuthResponse>物件或ApiResponse<?>錯誤訊息
@@ -35,13 +34,13 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<ApiResponse<AuthResponse>> register(@Valid @RequestBody RegisterRequest request) {
         AuthResponse response = service.register(request);
-        
+
         return ResponseEntity.ok(ApiResponse.success(response, "成功"));
     }
-    
+
     /**
      * 登入API
-     * POST /api/auth/login
+     * POST /auth/login
      * 
      * @param request
      * @return 200 OK + ApiResponse<AuthResponse>物件或ApiResponse<?>錯誤訊息
@@ -55,7 +54,7 @@ public class AuthController {
 
     /**
      * 獲取當前登入使用者資訊
-     * GET /api/auth/me
+     * GET /auth/me
      * 需要在HTTP header帶上Authorization: Bearer {token}
      * 
      * @return 200 OK + ApiResponse<UserInfoResponse>或ApiResponse<?>錯誤訊息
@@ -63,7 +62,7 @@ public class AuthController {
     @GetMapping("/me")
     public ResponseEntity<ApiResponse<UserInfoResponse>> getCurrentUser() {
         User user = service.getCurrentUser();
-        
+
         UserInfoResponse response = UserInfoResponse.builder()
                 .userId(user.getUserId())
                 .email(user.getEmail())
