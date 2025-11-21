@@ -1,10 +1,12 @@
 package com.eeit205team5.rentalmanagement.common.exception;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.eeit205team5.rentalmanagement.common.dto.response.ApiResponse;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +30,28 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST) // 400
                 .body(ApiResponse.fail(e.getMessage())); // 自訂錯誤訊息
+    }
+
+    // 處理 JSON 解析錯誤（包含 enum 錯誤）
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ApiResponse<?>> handleJsonParseError(
+            HttpMessageNotReadableException ex) {
+
+        String message = "請求格式錯誤";
+
+        // 可以進一步解析具體原因
+        Throwable cause = ex.getCause();
+        if (cause instanceof InvalidFormatException ife) {
+            if (ife.getTargetType().isEnum()) {
+                message = String.format("無效的值 '%s'，允許的值為: %s",
+                        ife.getValue(),
+                        Arrays.toString(ife.getTargetType().getEnumConstants()));
+            }
+        }
+
+        return ResponseEntity
+                .badRequest() // 400
+                .body(ApiResponse.fail(message));
     }
 
     // 處理驗證例外(@Vaild)
