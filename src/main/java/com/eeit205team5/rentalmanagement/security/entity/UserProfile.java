@@ -1,4 +1,4 @@
-package com.eeit205team5.rentalmanagement.user.entity;
+package com.eeit205team5.rentalmanagement.security.entity;
 
 import java.time.LocalDate;
 

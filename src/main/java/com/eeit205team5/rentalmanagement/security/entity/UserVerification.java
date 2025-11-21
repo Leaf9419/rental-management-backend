@@ -1,6 +1,6 @@
-package com.eeit205team5.rentalmanagement.user.entity;
+package com.eeit205team5.rentalmanagement.security.entity;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -21,7 +21,7 @@ public class UserVerification {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "verification_id")
     private Long verificationId;
-    
+
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
@@ -38,10 +38,10 @@ public class UserVerification {
     private Long verifiedBy; // 管理員ID
 
     @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 
     @PrePersist
     protected void onCreate() {
-        createdAt = LocalDateTime.now();
+        createdAt = Instant.now();
     }
 }
