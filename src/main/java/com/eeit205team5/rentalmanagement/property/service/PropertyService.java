@@ -7,6 +7,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import com.eeit205team5.rentalmanagement.property.constant.PropertyFacility;
 import com.eeit205team5.rentalmanagement.property.constant.PublishStatus;
 import com.eeit205team5.rentalmanagement.property.constant.SortBy;
 import com.eeit205team5.rentalmanagement.property.constant.SortOrder;
@@ -58,6 +59,57 @@ public class PropertyService {
     }
 
     public Property createProperty(PropertyCreateRequest request) {
-        return null;
+        Property property = Property.builder()
+                .propertyType(request.getPropertyType())
+                .title(request.getTitle())
+                .description(request.getDescription())
+                // 聯絡人 5
+                .contactRole(request.getContactRole())
+                .contactName(request.getContactName())
+                .contactPhone(request.getContactPhone())
+                .contactEmail(request.getContactEmail())
+                .contactLine(request.getContactLine())
+                // 地址 6
+                .city(request.getCity())
+                .district(request.getDistrict())
+                .streetAddress(request.getStreetAddress())
+                .floor(request.getFloor())
+                .latitude(request.getLatitude())
+                .longitude(request.getLongitude())
+                // 建物 4
+                .buildingName(request.getBuildingName())
+                .buildingType(request.getBuildingType())
+                .totalFloors(request.getTotalFloors())
+                .hasElevator(request.getHasElevator())
+                // 格局 6
+                .bedrooms(request.getBedrooms())
+                .livingRooms(request.getLivingRooms())
+                .bathrooms(request.getBathrooms())
+                .balconies(request.getBalconies())
+                .parkingSpaces(request.getParkingSpaces())
+                .usableArea(request.getUsableArea())
+                // 租客偏好
+                .preferredTenantGender(request.getPreferredTenantGender())
+                // 設備與設施
+                .propertyFacilities(PropertyFacility.encode(request.getFacilities()))
+                // 開伙 & 養寵物
+                .allowsCooking(request.getAllowsCooking())
+                .allowsPets(request.getAllowsPets())
+                // 租金 4
+                .monthlyRent(request.getMonthlyRent())
+                .depositMonths(request.getDepositMonths())
+                .managementFee(request.getManagementFee())
+                .utilityFeeIncluded(request.getUtilityFeeIncluded())
+                // 租期
+                .minLeaseMonths(request.getMinLeaseMonths())
+                .availableFromDate(request.getAvailableFromDate())
+                // 擁有權證
+                .hasOwnershipCertificate(request.getHasOwnershipCertificate())
+                .certificateImageUrl(request.getCertificateImageUrl())
+                // build
+                .build();
+
+        Property savedProperty = propertyRepository.save(property);
+        return savedProperty;
     }
 }

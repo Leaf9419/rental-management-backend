@@ -8,13 +8,7 @@ import com.eeit205team5.rentalmanagement.property.constant.BuildingType;
 import com.eeit205team5.rentalmanagement.property.constant.PreferredTenantGender;
 import com.eeit205team5.rentalmanagement.property.constant.PropertyFacility;
 import com.eeit205team5.rentalmanagement.property.constant.PropertyType;
-import com.eeit205team5.rentalmanagement.property.constant.PublishStatus;
-import com.eeit205team5.rentalmanagement.property.constant.RentalStatus;
-import com.eeit205team5.rentalmanagement.property.constant.ReviewStatus;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
