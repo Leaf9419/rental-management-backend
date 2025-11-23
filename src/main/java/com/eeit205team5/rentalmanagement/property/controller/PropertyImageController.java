@@ -22,7 +22,7 @@ import com.eeit205team5.rentalmanagement.property.service.PropertyImageService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/properties/{propertyId}/images")
+@RequestMapping("/properties/{propertyId}/images")
 @RequiredArgsConstructor
 public class PropertyImageController {
 
