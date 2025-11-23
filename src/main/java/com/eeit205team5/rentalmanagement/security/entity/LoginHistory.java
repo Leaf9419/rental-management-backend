@@ -13,7 +13,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "login_history")
+@Table(name = "login_histories")
 @Getter
 @Setter
 public class LoginHistory {

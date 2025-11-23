@@ -1,6 +1,6 @@
 package com.eeit205team5.rentalmanagement.security.entity;
 
-import java.time.LocalDate;
+import java.time.Instant;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -37,7 +37,7 @@ public class UserProfile {
     private String gender; // male、female、other
 
     @Column(name = "birth_date")
-    private LocalDate birthDate;
+    private Instant birthDate;
 
     @Column(name = "id_number_hash")
     private String idNumberHash;
