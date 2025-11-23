@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.eeit205team5.rentalmanagement.common.dto.response.ApiResponse;
@@ -25,16 +26,17 @@ import lombok.extern.slf4j.Slf4j;
 public class GlobalExceptionHandler {
     // 處理業務邏輯例外
     @ExceptionHandler(BusinessException.class)
-    public ResponseEntity<ApiResponse<Object>> handleBusinessException(BusinessException e) {
+    @ResponseStatus(HttpStatus.BAD_REQUEST) // 400
+    public ApiResponse<?> handleBusinessException(BusinessException e) {
         log.warn("Business exception: {}", e.getMessage());
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST) // 400
-                .body(ApiResponse.fail(e.getMessage())); // 自訂錯誤訊息
+        return ApiResponse.fail(e.getMessage()); // 自訂錯誤訊息
     }
 
     // 處理 JSON 解析錯誤（包含 enum 錯誤）
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<ApiResponse<?>> handleJsonParseError(
+    @ResponseStatus(HttpStatus.BAD_REQUEST) // 400
+    public ApiResponse<?> handleJsonParseError(
             HttpMessageNotReadableException ex) {
 
         String message = "請求格式錯誤";
@@ -49,15 +51,14 @@ public class GlobalExceptionHandler {
             }
         }
 
-        return ResponseEntity
-                .badRequest() // 400
-                .body(ApiResponse.fail(message));
+        return ApiResponse.fail(message);
     }
 
     // 處理驗證例外(@Vaild)
     // { "email": "Email格式不正確", "password": "密碼至少8個字元" }
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ApiResponse<Map<String, String>>> handleValidationException(
+    @ResponseStatus(HttpStatus.BAD_REQUEST) // 400
+    public ApiResponse<?> handleValidationException(
             MethodArgumentNotValidException e) {
         log.warn("Validation errors: {}", e.getBindingResult().getAllErrors());
 
@@ -69,62 +70,61 @@ public class GlobalExceptionHandler {
             errors.put(field, message);
         });
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST) // 400
-                .body(ApiResponse.fail(errors, "驗證失敗"));
+        return ApiResponse.fail(errors, "驗證失敗");
     }
 
     // 處理帳號密碼錯誤
     @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<ApiResponse<Object>> handleBadCredentials(BadCredentialsException e) {
+    @ResponseStatus(HttpStatus.UNAUTHORIZED) // 401
+    public ApiResponse<?> handleBadCredentials(BadCredentialsException e) {
         log.warn("Bad credentials: {}", e.getMessage());
 
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED) // 401
-                .body(ApiResponse.fail("帳號或密碼錯誤"));
+        return ApiResponse.fail("帳號或密碼錯誤");
     }
 
     // 處理找不到使用者
     @ExceptionHandler(UsernameNotFoundException.class)
-    public ResponseEntity<ApiResponse<Object>> handleUsernameNotFound(UsernameNotFoundException e) {
+    @ResponseStatus(HttpStatus.NOT_FOUND) // 404
+    public ApiResponse<?> handleUsernameNotFound(UsernameNotFoundException e) {
         log.warn("Username not found: {}", e.getMessage());
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND) // 404
-                .body(ApiResponse.fail("找不到使用者"));
+        return ApiResponse.fail("找不到使用者");
     }
 
     // 處理參數錯誤
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ApiResponse<Object>> handleBadRequest(IllegalArgumentException e) {
+    @ResponseStatus(HttpStatus.BAD_REQUEST) // 400
+    public ApiResponse<?> handleBadRequest(IllegalArgumentException e) {
         log.warn("Entity not found: {}", e.getMessage());
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST) // 400
-                .body(ApiResponse.fail("參數錯誤: " + e.getMessage()));
+        return ApiResponse.fail("參數錯誤: " + e.getMessage());
     }
 
     // 處理找不到資料
     @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<ApiResponse<Void>> handleEntityNotFound(EntityNotFoundException e) {
+    @ResponseStatus(HttpStatus.NOT_FOUND) // 404
+    public ApiResponse<Void> handleEntityNotFound(EntityNotFoundException e) {
         log.warn("Invalid argument: {}", e.getMessage());
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND) // 404
-                .body(ApiResponse.fail("查無資料"));
+        return ApiResponse.fail("查無資料");
     }
 
     // 處理RuntimeException
     // 不能把e.getMessage()回傳給前端，會洩漏內部資訊
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ApiResponse<Object>> handleRuntime(RuntimeException e) {
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR) // 500
+    public ApiResponse<?> handleRuntime(RuntimeException e) {
         log.error("Runtime exception: ", e);
 
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR) // 500
-                .body(ApiResponse.fail("系統執行錯誤"));
+        return ApiResponse.fail("系統執行錯誤");
     }
 
     // 處理其他未預期的例外
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiResponse<Object>> handleOther(Exception e) {
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR) // 500
+    public ApiResponse<?> handleOther(Exception e) {
         log.error("Unhandled exception: ", e);
 
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR) // 500
-                .body(ApiResponse.fail("系統發生未預期錯誤"));
+        return ApiResponse.fail("系統發生未預期錯誤");
     }
 }

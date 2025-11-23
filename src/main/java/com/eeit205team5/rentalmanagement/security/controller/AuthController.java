@@ -1,10 +1,11 @@
 package com.eeit205team5.rentalmanagement.security.controller;
 
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.eeit205team5.rentalmanagement.common.dto.response.ApiResponse;
@@ -32,10 +33,11 @@ public class AuthController {
      * @return 200 OK + ApiResponse<AuthResponse>物件或ApiResponse<?>錯誤訊息
      */
     @PostMapping("/register")
-    public ResponseEntity<ApiResponse<AuthResponse>> register(@Valid @RequestBody RegisterRequest request) {
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse<AuthResponse> register(@Valid @RequestBody RegisterRequest request) {
         AuthResponse response = service.register(request);
 
-        return ResponseEntity.ok(ApiResponse.success(response, "成功"));
+        return ApiResponse.success(response, "成功");
     }
 
     /**
@@ -46,10 +48,11 @@ public class AuthController {
      * @return 200 OK + ApiResponse<AuthResponse>物件或ApiResponse<?>錯誤訊息
      */
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<AuthResponse>> login(@Valid @RequestBody LoginRequest request) {
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
         AuthResponse response = service.login(request);
 
-        return ResponseEntity.ok(ApiResponse.success(response, "成功"));
+        return ApiResponse.success(response, "成功");
     }
 
     /**
@@ -60,7 +63,8 @@ public class AuthController {
      * @return 200 OK + ApiResponse<UserInfoResponse>或ApiResponse<?>錯誤訊息
      */
     @GetMapping("/me")
-    public ResponseEntity<ApiResponse<UserInfoResponse>> getCurrentUser() {
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse<UserInfoResponse> getCurrentUser() {
         User user = service.getCurrentUser();
 
         UserInfoResponse response = UserInfoResponse.builder()
@@ -74,6 +78,6 @@ public class AuthController {
                 .createdAt(user.getCreatedAt())
                 .build();
 
-        return ResponseEntity.ok(ApiResponse.success(response, "成功"));
+        return ApiResponse.success(response, "成功");
     }
 }
