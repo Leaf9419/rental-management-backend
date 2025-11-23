@@ -26,7 +26,7 @@ public class AuthService {
     private final UserRepository repository;
     private final PasswordEncoder passwordEncoder; // 在SecurityConfig配置@Bean，BCryptPasswordEncoder物件自動注入passwordEncoder
     private final JwtTokenProvider jwtTokenProvider;
-    private final AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager; // 不能自己new，透過SecurityConfig自動注入
 
     /**
      * 使用者註冊

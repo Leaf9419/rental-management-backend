@@ -55,7 +55,7 @@ public class GlobalExceptionHandler {
     }
 
     // 處理驗證例外(@Vaild)
-    // { "email": "Email格式不正確", "password": "密碼長度至少8位" }
+    // { "email": "Email格式不正確", "password": "密碼至少8個字元" }
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiResponse<Map<String, String>>> handleValidationException(
             MethodArgumentNotValidException e) {
@@ -110,7 +110,7 @@ public class GlobalExceptionHandler {
     }
 
     // 處理RuntimeException
-    // 能把e.getMessage()回傳給前端，會洩漏內部資訊
+    // 不能把e.getMessage()回傳給前端，會洩漏內部資訊
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ApiResponse<Object>> handleRuntime(RuntimeException e) {
         log.error("Runtime exception: ", e);

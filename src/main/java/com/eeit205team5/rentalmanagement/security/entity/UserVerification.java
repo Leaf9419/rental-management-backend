@@ -13,7 +13,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "user_verification")
+@Table(name = "user_verifications")
 @Getter
 @Setter
 public class UserVerification {

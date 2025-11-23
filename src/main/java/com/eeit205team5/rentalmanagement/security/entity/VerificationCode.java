@@ -13,7 +13,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "verification_code")
+@Table(name = "verification_codes")
 @Getter
 @Setter
 public class VerificationCode {
@@ -46,5 +46,15 @@ public class VerificationCode {
     @PrePersist
     protected void onCreate() {
         createdAt = Instant.now();
+    }
+
+    // 檢查驗證碼是否已過期
+    public boolean isExpired() {
+        return Instant.now().isAfter(expiresAt);
+    }
+
+    // 檢查驗證碼是否還可用(未使用且未過期)
+    public boolean isValid() {
+        return !used && !isExpired();
     }
 }
