@@ -4,9 +4,19 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import com.eeit205team5.rentalmanagement.booking.constant.BookingStatus;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 
 @Entity
@@ -14,6 +24,7 @@ import jakarta.persistence.Table;
 public class Booking {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "booking_id")
     private Long bookingId;
 
@@ -23,26 +34,39 @@ public class Booking {
     @Column(name = "member_id")
     private Long memberId;
 
-    @Column(name = "booking_date")
+    @Column(name = "booking_date", nullable = false)
     private LocalDate bookingDate;
 
-    @Column(name = "booking_start_time")
+    @Column(name = "booking_start_time", nullable = false)
     private LocalTime bookingStartTime;
 
-    @Column(name = "booking_end_time")
+    @Column(name = "booking_end_time", nullable = false)
     private LocalTime bookingEndTime;
 
-    @Column(name = "booking_status")
-    private String bookingStatus;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "booking_status", nullable = false)
+    private BookingStatus bookingStatus;
 
-    @Column(name = "create_time")
+    @CreationTimestamp
+    @Column(name = "create_time", updatable = false)
     private LocalDateTime createTime;
 
+    @UpdateTimestamp
     @Column(name = "update_time")
     private LocalDateTime updateTime;
 
     @Column(name = "remark")
     private String remark;
+
+    // 驗證機制，確保結束時間不早於開始時間
+    @PrePersist
+    public void prePersist() {
+        if (bookingEndTime.isBefore(bookingStartTime)) {
+            throw new IllegalArgumentException("結束時間不能早於開始時間");
+        }
+    }
+
+    // Getters and Setters
 
     public Long getBookingId() {
         return bookingId;
@@ -92,11 +116,11 @@ public class Booking {
         this.bookingEndTime = bookingEndTime;
     }
 
-    public String getBookingStatus() {
+    public BookingStatus getBookingStatus() {
         return bookingStatus;
     }
 
-    public void setBookingStatus(String bookingStatus) {
+    public void setBookingStatus(BookingStatus bookingStatus) {
         this.bookingStatus = bookingStatus;
     }
 

@@ -27,8 +27,7 @@ public class BookingService {
         insert.setBookingDate(booking.getBookingDate());
         insert.setBookingStartTime(booking.getBookingStartTime());
         insert.setBookingEndTime(booking.getBookingEndTime());
-        insert.setBookingStatus("預約成功"); 
-        // pending / accepted / rejected / cancelled / expired
+        insert.setBookingStatus(booking.getBookingStatus());
         insert.setCreateTime(LocalDateTime.now());
         insert.setRemark(booking.getRemark());
         return bookingRepository.save(booking);
@@ -43,7 +42,7 @@ public class BookingService {
             update.setBookingDate(booking.getBookingDate());
             update.setBookingStartTime(booking.getBookingStartTime());
             update.setBookingEndTime(booking.getBookingEndTime());
-            update.setBookingStatus("修改預約成功");
+            update.setBookingStatus(booking.getBookingStatus());
             update.setUpdateTime(LocalDateTime.now());
             update.setRemark(booking.getRemark());
             return bookingRepository.save(booking);

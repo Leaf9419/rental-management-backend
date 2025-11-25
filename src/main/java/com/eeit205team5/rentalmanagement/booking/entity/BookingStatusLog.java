@@ -2,8 +2,14 @@ package com.eeit205team5.rentalmanagement.booking.entity;
 
 import java.time.LocalDateTime;
 
+import com.eeit205team5.rentalmanagement.booking.constant.BookingStatus;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
@@ -12,17 +18,20 @@ import jakarta.persistence.Table;
 public class BookingStatusLog {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "booking_status_log_id")
     private Long bookingStatusLogId;
 
     @Column(name = "booking_id")
     private Long bookingId;
 
-    @Column(name = "old_status")
-    private String oldStatus;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "old_status", nullable = false)
+    private BookingStatus oldStatus;
 
-    @Column(name = "now_status")
-    private String nowStatus;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "now_status", nullable = false)
+    private BookingStatus nowStatus;
 
     @Column(name = "update_time")
     private LocalDateTime updateTime;
@@ -46,19 +55,19 @@ public class BookingStatusLog {
         this.bookingId = bookingId;
     }
 
-    public String getOldStatus() {
+    public BookingStatus getOldStatus() {
         return oldStatus;
     }
 
-    public void setOldStatus(String oldStatus) {
+    public void setOldStatus(BookingStatus oldStatus) {
         this.oldStatus = oldStatus;
     }
 
-    public String getNowStatus() {
+    public BookingStatus getNowStatus() {
         return nowStatus;
     }
 
-    public void setNowStatus(String nowStatus) {
+    public void setNowStatus(BookingStatus nowStatus) {
         this.nowStatus = nowStatus;
     }
 
