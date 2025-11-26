@@ -17,9 +17,16 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
+@Getter
+@Setter
+@Builder
 @Table(name = "bookings")
 public class Booking {
 
@@ -43,9 +50,10 @@ public class Booking {
     @Column(name = "booking_end_time", nullable = false)
     private LocalTime bookingEndTime;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(name = "booking_status", nullable = false)
-    private BookingStatus bookingStatus;
+    private BookingStatus bookingStatus = BookingStatus.PENDING;
 
     @CreationTimestamp
     @Column(name = "create_time", updatable = false)
@@ -60,91 +68,11 @@ public class Booking {
 
     // 驗證機制，確保結束時間不早於開始時間
     @PrePersist
+    @PreUpdate
     public void prePersist() {
         if (bookingEndTime.isBefore(bookingStartTime)) {
             throw new IllegalArgumentException("結束時間不能早於開始時間");
         }
     }
 
-    // Getters and Setters
-
-    public Long getBookingId() {
-        return bookingId;
-    }
-
-    public void setBookingId(Long bookingId) {
-        this.bookingId = bookingId;
-    }
-
-    public Long getPropertiesId() {
-        return propertiesId;
-    }
-
-    public void setPropertiesId(Long propertiesId) {
-        this.propertiesId = propertiesId;
-    }
-
-    public Long getMemberId() {
-        return memberId;
-    }
-
-    public void setMemberId(Long memberId) {
-        this.memberId = memberId;
-    }
-
-    public LocalDate getBookingDate() {
-        return bookingDate;
-    }
-
-    public void setBookingDate(LocalDate bookingDate) {
-        this.bookingDate = bookingDate;
-    }
-
-    public LocalTime getBookingStartTime() {
-        return bookingStartTime;
-    }
-
-    public void setBookingStartTime(LocalTime bookingStartTime) {
-        this.bookingStartTime = bookingStartTime;
-    }
-
-    public LocalTime getBookingEndTime() {
-        return bookingEndTime;
-    }
-
-    public void setBookingEndTime(LocalTime bookingEndTime) {
-        this.bookingEndTime = bookingEndTime;
-    }
-
-    public BookingStatus getBookingStatus() {
-        return bookingStatus;
-    }
-
-    public void setBookingStatus(BookingStatus bookingStatus) {
-        this.bookingStatus = bookingStatus;
-    }
-
-    public LocalDateTime getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
-    }
-
-    public LocalDateTime getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(LocalDateTime updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
 }

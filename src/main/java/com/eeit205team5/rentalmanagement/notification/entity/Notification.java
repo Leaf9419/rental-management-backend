@@ -2,15 +2,31 @@ package com.eeit205team5.rentalmanagement.notification.entity;
 
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.CreationTimestamp;
+
+import com.eeit205team5.rentalmanagement.booking.constant.NotificationStatus;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "notifications")
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Notification {
 
     @Id
@@ -30,9 +46,12 @@ public class Notification {
     @Column(name = "notification_message")
     private String notificationMessage;
 
+    @Builder.Default
+    @Enumerated(EnumType.STRING)
     @Column(name = "notification_status")
-    private String notificationStatus;
+    private NotificationStatus notificationStatus = NotificationStatus.QUEUED;
 
+    @CreationTimestamp
     @Column(name = "sent_at")
     private LocalDateTime sentAt;
 
@@ -45,83 +64,4 @@ public class Notification {
     @Column(name = "response_code")
     private Long responseCode;
 
-    public Long getNotificationId() {
-        return notificationId;
-    }
-
-    public void setNotificationId(Long notificationId) {
-        this.notificationId = notificationId;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public String getNotificationType() {
-        return notificationType;
-    }
-
-    public void setNotificationType(String notificationType) {
-        this.notificationType = notificationType;
-    }
-
-    public String getNotificationTitle() {
-        return notificationTitle;
-    }
-
-    public void setNotificationTitle(String notificationTitle) {
-        this.notificationTitle = notificationTitle;
-    }
-
-    public String getNotificationMessage() {
-        return notificationMessage;
-    }
-
-    public void setNotificationMessage(String notificationMessage) {
-        this.notificationMessage = notificationMessage;
-    }
-
-    public String getNotificationStatus() {
-        return notificationStatus;
-    }
-
-    public void setNotificationStatus(String notificationStatus) {
-        this.notificationStatus = notificationStatus;
-    }
-
-    public LocalDateTime getSentAt() {
-        return sentAt;
-    }
-
-    public void setSentAt(LocalDateTime sentAt) {
-        this.sentAt = sentAt;
-    }
-
-    public String getAccessBy() {
-        return accessBy;
-    }
-
-    public void setAccessBy(String accessBy) {
-        this.accessBy = accessBy;
-    }
-
-    public String getPayloadJson() {
-        return payloadJson;
-    }
-
-    public void setPayloadJson(String payloadJson) {
-        this.payloadJson = payloadJson;
-    }
-
-    public Long getResponseCode() {
-        return responseCode;
-    }
-
-    public void setResponseCode(Long responseCode) {
-        this.responseCode = responseCode;
-    }
 }

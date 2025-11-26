@@ -6,13 +6,14 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.eeit205team5.rentalmanagement.booking.entity.Booking;
 import com.eeit205team5.rentalmanagement.booking.repository.BookingRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
-@Transactional
+@RequiredArgsConstructor
 public class BookingService {
 
     @Autowired
@@ -21,16 +22,19 @@ public class BookingService {
     // 新增
     public Booking create(Booking booking) {
 
-        Booking insert = new Booking();
-        insert.setPropertiesId(booking.getPropertiesId());
-        insert.setMemberId(booking.getMemberId());
-        insert.setBookingDate(booking.getBookingDate());
-        insert.setBookingStartTime(booking.getBookingStartTime());
-        insert.setBookingEndTime(booking.getBookingEndTime());
-        insert.setBookingStatus(booking.getBookingStatus());
-        insert.setCreateTime(LocalDateTime.now());
-        insert.setRemark(booking.getRemark());
-        return bookingRepository.save(booking);
+        // 使用 Builder 建立新的 Booking 物件
+        Booking insert = Booking.builder()
+                .propertiesId(booking.getPropertiesId())
+                .memberId(booking.getMemberId())
+                .bookingDate(booking.getBookingDate())
+                .bookingStartTime(booking.getBookingStartTime())
+                .bookingEndTime(booking.getBookingEndTime())
+                .remark(booking.getRemark())
+                // bookingStatus 可以選擇使用預設值，也可以從傳入物件帶入
+                .bookingStatus(booking.getBookingStatus() != null ? booking.getBookingStatus() : null)
+                .build();
+
+        return bookingRepository.save(insert);
     }
 
     // 修改

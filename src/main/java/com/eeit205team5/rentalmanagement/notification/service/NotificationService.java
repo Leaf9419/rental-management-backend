@@ -1,33 +1,40 @@
 package com.eeit205team5.rentalmanagement.notification.service;
 
-import java.time.LocalDateTime;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.eeit205team5.rentalmanagement.notification.entity.Notification;
 import com.eeit205team5.rentalmanagement.notification.repository.NotificationRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
-@Transactional
+@RequiredArgsConstructor
 public class NotificationService {
 
-    @Autowired
-    private NotificationRepository notificationRepository;
+    private final NotificationRepository notificationRepository;
 
-    // 新增 (隨便打打而已，還要改)
+    /**
+     * 新增通知
+     * 
+     * @param notification 從 Controller 或 DTO 傳入的 Notification 物件
+     * @return 新增後的 Notification
+     */
     public Notification create(Notification notification) {
+        // 使用 Builder 建立新的 Notification 物件
+        Notification insert = Notification.builder()
+                .userId(notification.getUserId())
+                .notificationType(notification.getNotificationType())
+                .notificationTitle(notification.getNotificationTitle())
+                .notificationMessage(notification.getNotificationMessage())
+                .notificationStatus(notification.getNotificationStatus() != null
+                        ? notification.getNotificationStatus()
+                        : null) // 如果傳入為 null，Builder.Default 會自動使用 QUEUED
+                .accessBy(notification.getAccessBy())
+                .payloadJson(notification.getPayloadJson())
+                .responseCode(notification.getResponseCode())
+                .build();
 
-        Notification insert = new Notification();
-        insert.setUserId(notification.getUserId());
-        insert.setNotificationType(notification.getNotificationType());
-        insert.setNotificationTitle(notification.getNotificationTitle());
-        insert.setNotificationMessage(notification.getNotificationMessage());
-        insert.setNotificationStatus("未讀");
-        insert.setSentAt(LocalDateTime.now());
-        insert.setAccessBy(notification.getAccessBy());
-
-        return notificationRepository.save(notification);
+        // 儲存到資料庫
+        return notificationRepository.save(insert);
     }
 }

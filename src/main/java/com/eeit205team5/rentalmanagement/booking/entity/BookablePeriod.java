@@ -9,8 +9,12 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "bookable_periods")
 public class BookablePeriod {
 
@@ -31,43 +35,4 @@ public class BookablePeriod {
     @Column(name = "bookable_end_time")
     private LocalDateTime bookableEndTime;
 
-    public Long getBookablePeriodsId() {
-        return bookablePeriodsId;
-    }
-
-    public void setBookablePeriodsId(Long bookablePeriodsId) {
-        this.bookablePeriodsId = bookablePeriodsId;
-    }
-
-    public Long getLandlordId() {
-        return landlordId;
-    }
-
-    public void setLandlordId(Long landlordId) {
-        this.landlordId = landlordId;
-    }
-
-    public LocalDate getBookableDate() {
-        return bookableDate;
-    }
-
-    public void setBookableDate(LocalDate bookableDate) {
-        this.bookableDate = bookableDate;
-    }
-
-    public LocalDateTime getBookableStartTime() {
-        return bookableStartTime;
-    }
-
-    public void setBookableStartTime(LocalDateTime bookableStartTime) {
-        this.bookableStartTime = bookableStartTime;
-    }
-
-    public LocalDateTime getBookableEndTime() {
-        return bookableEndTime;
-    }
-
-    public void setBookableEndTime(LocalDateTime bookableEndTime) {
-        this.bookableEndTime = bookableEndTime;
-    }
 }

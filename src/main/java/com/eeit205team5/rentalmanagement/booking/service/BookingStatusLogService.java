@@ -1,7 +1,5 @@
 package com.eeit205team5.rentalmanagement.booking.service;
 
-import java.time.LocalDateTime;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +19,6 @@ public class BookingStatusLogService {
         BookingStatusLog insert = new BookingStatusLog();
         insert.setOldStatus(bookingStatusLog.getOldStatus());
         insert.setNowStatus(bookingStatusLog.getNowStatus());
-        insert.setUpdateTime(LocalDateTime.now());
         insert.setUpdateBy(bookingStatusLog.getUpdateBy());
         return bookingStatusLogRepository.save(bookingStatusLog);
     }
