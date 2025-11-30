@@ -21,7 +21,10 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import com.eeit205team5.rentalmanagement.PermitUrlJohn;
 import com.eeit205team5.rentalmanagement.PermitUrlLeaf;
 import com.eeit205team5.rentalmanagement.PermitUrlNa;
-import com.eeit205team5.rentalmanagement.security.JwtAuthenticationFilter;
+import com.eeit205team5.rentalmanagement.security.basic.JwtAuthenticationFilter;
+import com.eeit205team5.rentalmanagement.security.oauth2.OAuth2AuthenticationFailureHandler;
+import com.eeit205team5.rentalmanagement.security.oauth2.OAuth2AuthenticationSuccessHandler;
+import com.eeit205team5.rentalmanagement.security.service.CustomOAuth2UserService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -30,7 +33,10 @@ import lombok.RequiredArgsConstructor;
 @EnableMethodSecurity // 未來擴充RBAC會用到
 @EnableWebSecurity // 要完全覆蓋預設安全模型，或使用WebSecurityCustomizer才需要
 public class SecurityConfig {
-    private final JwtAuthenticationFilter filter;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final CustomOAuth2UserService customOAuth2UserService;
+    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
+    private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
 
     // 提供全域PasswordEncoder bean，加密和比對密碼
     // 這裡指定使用BCryptPasswordEncoder實作類別
@@ -66,7 +72,10 @@ public class SecurityConfig {
                     // 公開的API(不需要認證)
                     auth.requestMatchers(
                             "/auth/register",
-                            "/auth/login")
+                            "/auth/login",
+                            "/auth/oauth2/**", // OAuth2 callback
+                            "/oauth2/**", // OAuth2 endpoints
+                            "/login/oauth2/*") // OAuth2 login
                             .permitAll();
 
                     // 公開的API(不需要認證) for test
@@ -84,18 +93,31 @@ public class SecurityConfig {
                     auth.anyRequest().authenticated();
                 })
 
-                // 在UsernamePasswordAuthenticationFilter之前加入JWT filter
-                .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
+                // OAuth2登入設定
+                .oauth2Login(oauth2 -> oauth2
+                        // 自訂redirect-uri base
+                        .redirectionEndpoint(redir -> redir
+                                .baseUri("/auth/oauth2/callback/*") // 取代預設/login/oauth2/code/*
+                        )
+                        // 當OAuth2 provider已經完成授權，呼叫customOAuth2UserService.loadUser(request)
+                        .userInfoEndpoint(userInfo -> userInfo
+                                .userService(customOAuth2UserService))
+                        .successHandler(oAuth2AuthenticationSuccessHandler)
+                        .failureHandler(oAuth2AuthenticationFailureHandler))
 
-        // 建立完整的security filter chain
+                // 在UsernamePasswordAuthenticationFilter之前加入JWT filter
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
+        // 建立完整的filter chain
         // Spring Security自動註冊到filter排程中
         return http.build();
     }
 
+    // 跨域設定
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:5173", "http://localhost:5174"));
+        configuration.setAllowedOriginPatterns(List.of("http://localhost:*"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);

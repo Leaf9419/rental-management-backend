@@ -47,7 +47,7 @@ public class User {
     private Boolean phoneVerified = false;
 
     @Column(name = "provider")
-    private String provider; // 第三方登入 // google、facebook、line
+    private String provider; // 第三方登入 // google、line
 
     @Column(name = "provider_id")
     private String providerId; // 第三方登入唯一ID

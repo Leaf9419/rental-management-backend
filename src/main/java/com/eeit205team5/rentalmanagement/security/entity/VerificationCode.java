@@ -54,6 +54,7 @@ public class VerificationCode {
     }
 
     // 檢查驗證碼是否還可用(未使用且未過期)
+    // 用於快速判斷
     public boolean isValid() {
         return !used && !isExpired();
     }
