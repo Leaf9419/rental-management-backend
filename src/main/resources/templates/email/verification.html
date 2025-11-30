@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white; padding: 30px;
+            text-align: center;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .content {
+            background: #f9f9f9;
+            padding: 30px;
+            border-radius: 0 0 10px 10px;
+        }
+
+        .code-box {
+            background: white; border: 2px dashed #667eea;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .code {
+            font-size: 32px;
+            font-weight: bold;
+            color: #667eea;
+            letter-spacing: 5px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #999;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>歡迎使用租屋平台</h1>
+    </div>
+    <div class="content">
+        <h2>驗證您的 Email</h2>
+        <p>您好！感謝您註冊我們的租屋平台。</p>
+        <p>請使用以下驗證碼完成註冊：</p>
+
+        <div class="code-box">
+            <div class="code" th:text="${code}">123456</div>
+        </div>
+
+        <p style="color: #e74c3c;">此驗證碼將在 <strong>5 分鐘</strong>後失效</p>
+        <p style="color: #999; font-size: 14px;">
+            如果您沒有註冊帳號，請忽略此郵件。
+        </p>
+    </div>
+    <div class="footer">
+        <p>此為系統自動發送的郵件，請勿直接回覆</p>
+        <p>&copy; 2025 租屋平台 All rights reserved.</p>
+    </div>
+</div>
+</body>
+</html>

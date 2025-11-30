@@ -1,4 +1,4 @@
-package com.eeit205team5.rentalmanagement.security;
+package com.eeit205team5.rentalmanagement.security.basic;
 
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
@@ -36,23 +36,23 @@ public class JwtTokenProvider {
     // 在AuthService中，經過一系列的處理，建立好驗證成功的Authentication物件
     /* 
     * UsernamePasswordAuthenticationToken {
-    * principal= UserPrincipal (對應的UserDetails物件)
+    * principal= CustomUserDetails (對應的UserDetails物件)
     * credentials = null (為安全起見會清掉)
-    * authorities = [ROLE_TENANT]/[ROLE_LANDLORD] (userPrincipal.getAuthorities())
+    * authorities = [ROLE_TENANT]/[ROLE_LANDLORD] (customUserDetails.getAuthorities())
     * authenticated = true
     * }
     */
     public String generateToken(Authentication authentication) {
-        // getPrincipal():回傳自訂使用者物件(UserPrincipal)
-        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+        // getPrincipal():回傳自訂使用者物件(CustomUserDetails)
+        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
 
         Instant now = Instant.now();
         Instant expiryDate = now.plusMillis(jwtExpiration);
 
         return Jwts.builder()
-                .subject(String.valueOf(userPrincipal.getUserId())) // subject // JWT包含userId，不用查資料庫，實現stateless
-                .claim("email", userPrincipal.getEmail()) // payload
-                .claim("role", userPrincipal.getRole()) // payload
+                .subject(String.valueOf(customUserDetails.getUserId())) // subject // JWT包含userId，不用查資料庫，實現stateless
+                .claim("email", customUserDetails.getEmail()) // payload
+                .claim("role", customUserDetails.getRole()) // payload
                 .issuedAt(Date.from(now))
                 .expiration(Date.from(expiryDate))
                 .signWith(getSigningKey()) // 新版JJWT只需傳入一個參數，自動判斷HS256、HS512

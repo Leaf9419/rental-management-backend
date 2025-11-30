@@ -1,4 +1,4 @@
-package com.eeit205team5.rentalmanagement.security;
+package com.eeit205team5.rentalmanagement.security.service;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.eeit205team5.rentalmanagement.security.basic.CustomUserDetails;
 import com.eeit205team5.rentalmanagement.security.entity.User;
 import com.eeit205team5.rentalmanagement.security.repository.UserRepository;
 
@@ -16,18 +17,18 @@ import lombok.RequiredArgsConstructor;
 /*
 當Spring Security看到AuthenticationProvider需要UserDetailsService時，它會找@Bean UserDetailsService
 然後會找到這個類別，因為有implement UserDetailsService
-就能使用這裡覆寫的方法，而不是原本UserDetailsService的方法，回傳值就能是自己寫的UserPrincipal物件
+就能使用這裡覆寫的方法，而不是原本UserDetailsService的方法，回傳值就能是自己寫的CustomUserDetails物件
 */
 @Service
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
-    private final UserRepository repository;
+    private final UserRepository userRepository;
 
     /**
      * 根據userId載入使用者(JWT驗證時用，在JWT filter裡呼叫)
      * 
      * @param userId
-     * @return UserPrincipal物件
+     * @return CustomUserDetails物件
      */
     @Transactional(readOnly = true)
     public UserDetails loadUserById(Long userId) {
@@ -35,25 +36,25 @@ public class CustomUserDetailsService implements UserDetailsService {
             throw new IllegalArgumentException("userId不可為null");
         }
 
-        User user = repository.findById(userId)
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UsernameNotFoundException("找不到使用者ID: " + userId));
 
-        return UserPrincipal.create(user);
+        return CustomUserDetails.create(user);
     }
 
     /**
-     * 根據email載入使用者
+     * 根據Email載入使用者
      * 
      * @param email
-     * @return UserPrincipal物件
+     * @return CustomUserDetails物件
      */
     // 注意:UserDetailsService介面只有loadUserByUsername()
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = repository.findByEmail(email)
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("找不到使用者: " + email));
 
-        return UserPrincipal.create(user);
+        return CustomUserDetails.create(user);
     }
 }
